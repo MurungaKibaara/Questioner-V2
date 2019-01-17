@@ -1,6 +1,8 @@
 '''Create database model to store user data'''
+import psycopg2
+from flask import jsonify
 from app.api.V2.models.postgresqldatabase import init_db
-
+RESPONSE = []
 
 class UserRecords():
     """ Create a model that stores users data"""
@@ -18,33 +20,34 @@ class UserRecords():
             "email": email,
             "password": password,
             "confirm_password": confirm_password,
-            "imagefile": imagefile,
+            "imagefile": imagefile
         }
 
-        query = """INSERT INTO users_database (firstname, lastname, email, password, confirm_password, imagefile) VALUES (%(firstname)s, %(lastname)s, %(email)s,%(password)s, %(confirm_password)s, %(imagefile)s);"""
+        query = """INSERT INTO users (firstname, lastname, email,
+        password, confirm_password, imagefile) VALUES
+        (%(firstname)s, %(lastname)s, %(email)s,%(password)s,
+        %(confirm_password)s, %(imagefile)s);"""
+
+        cur = self.database.cursor()
+        cur.execute(query, payload)
+        self.database.commit()
+
+    def login_users(self):
+        '''Login a user'''
         try:
-            cur = self.database.cursor()
-            cur.execute(query, payload)
-            self.database.commit()
-        except:
-            pass
+            cur = init_db().cursor()
+            cur.execute("""SELECT * FROM users;""")
+            data = cur.fetchall()
 
-    def get_users(self):
-        '''Get registered user data'''
-        dbconn = self.database
-        cur = dbconn.cursor()
-        cur.execute("""SELECT userid, email, password FROM users;""")
-        data = cur.fetchall()
-        response = []
+        except (psycopg2.Error) as error:
+            return jsonify(error)
 
-        for users in enumerate(data):
-            userid, email, password = users
+        for user in enumerate(data):
+            email, password = user
 
             user_data = dict(
-                userid=int(userid),
                 email=email,
                 password=password
             )
-            response.append(user_data)
-
-            return response
+            RESPONSE.append(user_data)
+        return RESPONSE
