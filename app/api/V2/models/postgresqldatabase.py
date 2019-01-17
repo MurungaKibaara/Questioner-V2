@@ -2,7 +2,8 @@
 import os
 import psycopg2
 
-URL = "dbname='Questioner', host='localhost', port='5432', user='ephy', password='root'"
+#URL = "dbname='Questioner', host='localhost', port='5432', user='ephy', password='root'"
+URL = "dbname=questioner host=localhost port=5432 user=ephy password='root'"
 DB_URL = os.getenv('DATABASE_URL')
 
 def connection(url):
@@ -25,11 +26,11 @@ def create_tables():
         cur.execute(query)
         conn.commit()
 
-def destroy_tables():
-    '''Function for dropping tables in tests'''
-    users_database = """DROP TABLE IF EXISTS users CASCADE"""
-    questions_database = """DROP TABLE IF EXISTS questions CASCADE"""
-    meetups_database = """DROP TABLE IF EXISTS meetups CASCADE"""
+# def destroy_tables():
+#     '''Function for dropping tables in tests'''
+#     users_database = """DROP TABLE IF EXISTS users CASCADE"""
+#     questions_database = """DROP TABLE IF EXISTS questions CASCADE"""
+#     meetups_database = """DROP TABLE IF EXISTS meetups CASCADE"""
 
 def tables():
     '''Function to define the tables'''
