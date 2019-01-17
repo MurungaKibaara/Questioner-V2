@@ -1,6 +1,8 @@
 # Questioner-V2
 
 ## Badges
+[![Build Status](https://travis-ci.com/MurungaKibaara/Questioner-V2.svg?branch=develop)](https://travis-ci.com/MurungaKibaara/Questioner-V2)
+[![Coverage Status](https://coveralls.io/repos/github/MurungaKibaara/Questioner-V2/badge.svg?branch=develop)](https://coveralls.io/github/MurungaKibaara/Questioner-V2?branch=develop)
 
 
 ## Questioner
