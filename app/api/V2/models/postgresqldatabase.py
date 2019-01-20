@@ -1,20 +1,17 @@
 '''Postgres Database connection model'''
 import os
 import psycopg2
+import flask
+APP = flask.Flask(__name__)
 
-#URL = "dbname='Questioner', host='localhost', port='5432', user='ephy', password='root'"
-URL = "dbname=questionerv2 host=localhost port=5432 user=ephy password='root'"
+URL = "dbname=questionerversion2 host=localhost port=5432 user=ephy password='root'"
 DB_URL = os.getenv('DATABASE_URL')
-
-# def connection(URL):
-#     '''Connectiong to db via psycopg2'''
-#     conn = psycopg2.connect(URL)
-#     return conn
 
 def init_db():
     '''Connecting to the DB'''
-    conn = psycopg2.connect(URL)
-    return conn
+    with APP.app_context():
+        conn = psycopg2.connect(URL)
+        return conn
 
 def create_tables():
     '''Function for creating tables in database'''
@@ -28,9 +25,9 @@ def create_tables():
 
 # def destroy_tables():
 #     '''Function for dropping tables in tests'''
-#     users_database = """DROP TABLE IF EXISTS users CASCADE"""
-#     questions_database = """DROP TABLE IF EXISTS questions CASCADE"""
-#     meetups_database = """DROP TABLE IF EXISTS meetups CASCADE"""
+#     users_db = """DROP TABLE IF EXISTS users CASCADE"""
+#     questions_db = """DROP TABLE IF EXISTS questions CASCADE"""
+#     meetups_db = """DROP TABLE IF EXISTS meetups CASCADE"""
 
 def tables():
     '''Function to define the tables'''
@@ -40,6 +37,8 @@ def tables():
             lastname character varying(1000) NOT NULL,
             email character varying(1000) NOT NULL,
             password character varying(1000) NOT NULL,
+            role character varying(1000) NOT NULL,
+            phonenumber character varying(1000) NOT NULL,
             confirm_password character varying(1000) NOT NULL,
             imagefile character varying(1000) NOT NULL,
             date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT TIMESTAMP 'epoch');
@@ -47,7 +46,8 @@ def tables():
 
     meetups_db = """CREATE TABLE IF NOT EXISTS meetups (
             meetup_id serial PRIMARY KEY NOT NULL,
-            Meeetup_title character varying(1000) NOT NULL,
+            Meetup_title character varying(1000) NOT NULL,
+            Meetup_image character varying(1000) NOT NULL,
             location character varying(1000) NOT NULL,
             meetup_date character varying(1000) NOT NULL,
             about character varying(1000) NOT NULL,
