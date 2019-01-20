@@ -3,53 +3,53 @@ import psycopg2
 from flask import jsonify
 from app.api.V2.models.postgresqldatabase import init_db
 
-class QuestionRecords():
+class CommentRecords():
     """ Create a model that stores users data"""
 
     def __init__(self):
         """initialize the database and argument variables"""
         self.database = init_db()
 
-    def questions(self, question):
+    def comments(self, comment):
         """ Add a new user to all user data """
 
         payload = {
-            "question": question
+            "comment": comment
         }
 
-        query = """INSERT INTO questions (question) VALUES (%(question)s);"""
+        query = """INSERT INTO comments (comment) VALUES (%(comment)s);"""
 
         cur = self.database.cursor()
         cur.execute(query, payload)
         self.database.commit()
 
-    def get_all_questions(self):
-        '''Get all questions'''
+    def get_all_comments(self):
+        '''Retrieve all comments'''
         try:
             cur = init_db().cursor()
-            cur.execute("""SELECT * FROM questions;""")
+            cur.execute("""SELECT * FROM comments;""")
             data = cur.fetchall()
 
-            question_data = {
+            comment_data = {
                 "status": "OK",
-                "Questions": data
+                "Comments": data
                 }, 200
-            return jsonify(question_data)
+            return jsonify(comment_data)
 
         except (psycopg2.Error) as error:
             return jsonify(error)
 
         return "No questions"
 
-    def get_one_question(self, question_id):
-        '''get one question'''
+    def get_one_comment(self, comment_id):
+        '''Retrieve one comment'''
         try:
             cur = init_db().cursor()
-            cur.execute("""  SELECT * FROM questions WHERE question_id = '%d'  """ %(question_id))
+            cur.execute("""  SELECT * FROM comments WHERE comment_id = '%d'  """ %(comment_id))
             data = cur.fetchone()
 
             if data is None:
-                return ({"Message":"No meetup by that ID"}), 404
+                return ({"Message":"No Comment by that ID"}), 404
             return jsonify(data), 200
 
         except (psycopg2.Error) as error:
