@@ -36,15 +36,15 @@ class MeetupRecords():
             data = cur.fetchall()
 
             meetup_data = {
-                "status": "OK",
-                "Questions": data
+                "status": "200",
+                "Meetups": data
             }, 200
             return jsonify(meetup_data)
 
         except psycopg2.Error as error:
             return jsonify(error)
 
-        return "No questions"
+        return "No Meetups"
 
     def get_one_meetup(self, meetup_id):
         '''get one question'''
@@ -54,13 +54,13 @@ class MeetupRecords():
             data = cur.fetchone()
 
             if data is None:
-                return ({"Message":"No meetup by that ID"}), 404
+                return jsonify({"Message":"No meetup by that ID"}), 404
             return jsonify(data), 200
 
         except (psycopg2.Error) as error:
             return jsonify(error)
 
-        return jsonify({"Message": "No questions in database"}), 404
+        return jsonify({"Message": "No meetups in database"}), 404
 
     def rsvp_a_meetup(self):
         '''RSVP MEETUP'''

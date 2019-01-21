@@ -71,7 +71,7 @@ def user_reg():
         return jsonify(error)
 
 
-@LOGIN.route('/login', methods=['GET'])
+@LOGIN.route('/login', methods=['POST'])
 def login():
     '''Allow users to log in'''
     return login_users()
