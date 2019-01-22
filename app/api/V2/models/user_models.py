@@ -9,7 +9,7 @@ from app.api.V2.models.postgres import Questioner
 from instance.config import Config
 JWT_SECRET = Config.SECRET_KEY
 
-INIT_DB = Questioner().init_db()
+INIT_DB = Questioner.init_db()
 
 class UserRecords():
     """ Create a model that stores users data"""

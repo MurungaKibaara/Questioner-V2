@@ -2,18 +2,18 @@
 import os
 from flask import Flask
 from dotenv import load_dotenv
-from instance.config import APP_CONFIG
+from instance.config import APP_CONFIG, TestingConfig, DevelopmentConfig
 from app.api.V2.views.user_views import REGISTRATION, LOGIN
 from app.api.V2.views.question_views import POSTQUESTION, GETQUESTIONS
 from app.api.V2.views.comment_views import POSTCOMMENTS, GETCOMMENTS
 from app.api.V2.views.meetup_views import POSTMEETUP, GETMEETUPS
-from app.api.V2.models.postgres import Questioner, destroy_tables, create_tables
+from app.api.V2.models.postgres import Questioner, destroy_tables
 
 
 def create_app(config_name):
     '''create app'''
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_object(APP_CONFIG)
+    app.config.from_object(APP_CONFIG[config_name])
     app.config.from_pyfile('config.py')
     app.register_blueprint(REGISTRATION, url_prefix='/api/V2')
     app.register_blueprint(LOGIN, url_prefix='/api/V2')
@@ -25,8 +25,8 @@ def create_app(config_name):
     app.register_blueprint(GETMEETUPS, url_prefix='/api/V2')
 
     with app.app_context():
-        print(Questioner().connect_db(app.config["DATABASE_URL"]))
-        create_tables()
+        Questioner().connect_db(app.config["DATABASE_URL"])
+        destroy_tables()
 
     return app
 

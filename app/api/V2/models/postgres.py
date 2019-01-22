@@ -1,34 +1,17 @@
 '''Postgres Database connection model'''
 import psycopg2
 from psycopg2.extras import DictCursor
-# APP = flask.Flask(__name__)
 
-
-class Questioner():
+class Questioner:
     '''DB connection'''
-    def __init__(self, conn=None):
-        self.conn = conn
-
-    def connect_db(self, env):
-        '''Connecting to the DB'''
-        self.conn = psycopg2.connect(env)
-        print(self.conn)
-
-
-    def init_db(self):
-        '''Return created connection'''
-        return self.conn
-
-
-def create_tables():
-    '''Create tables in the database'''
-    conn = Questioner().init_db()
-    cur = conn.cursor()
-    queries = tables()
-
-    for query in queries:
-        cur.execute(query)
-        conn.commit()
+    @classmethod
+    def connect_db(cls, url):
+        '''Connect to the database'''
+        cls.conn = psycopg2.connect(url)
+    @classmethod
+    def init_db(cls):
+        '''Return connection'''
+        return cls.conn
 
 def destroy_tables():
     '''Function for dropping tables in tests'''
@@ -38,7 +21,7 @@ def destroy_tables():
 
     queries = [users_db, questions_db, meetups_db]
 
-    conn = Questioner().init_db()
+    conn = Questioner.init_db()
     cur = conn.cursor(cursor_factory=DictCursor)
 
     for query in queries:
