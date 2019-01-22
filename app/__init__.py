@@ -1,12 +1,14 @@
 '''Register Blueprints'''
 import os
 from flask import Flask
+from dotenv import load_dotenv
 from instance.config import APP_CONFIG
 from app.api.V2.views.user_views import REGISTRATION, LOGIN
 from app.api.V2.views.question_views import POSTQUESTION, GETQUESTIONS
 from app.api.V2.views.comment_views import POSTCOMMENTS, GETCOMMENTS
 from app.api.V2.views.meetup_views import POSTMEETUP, GETMEETUPS
 from app.api.V2.models.postgresqldatabase import create_tables
+from app.api.V2.models.postgresqldatabase import init_db
 
 create_tables()
 
@@ -23,4 +25,12 @@ def create_app(config_name):
     app.register_blueprint(GETCOMMENTS, url_prefix='/api/V2')
     app.register_blueprint(POSTMEETUP, url_prefix='/api/V2')
     app.register_blueprint(GETMEETUPS, url_prefix='/api/V2')
+
+    init_db()
+
     return app
+
+
+APP_ROOT = os.path.join(os.path.dirname(__file__), '..')   # refers to application_top
+DOTENV_PATH = os.path.join(APP_ROOT, '.env')
+load_dotenv(DOTENV_PATH)

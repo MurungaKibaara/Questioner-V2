@@ -1,35 +1,23 @@
 '''Postgres Database connection model'''
+import os
 import psycopg2
+from psycopg2.extras import DictCursor
 import flask
 APP = flask.Flask(__name__)
 
-URL = "dbname=questionerversion2 host=localhost port=5432 user=ephy password='root'"
-TEST_URL = "dbname=testquestionerversion2 host=localhost port=5432 user=ephy password='root'"
+URL = os.getenv("DATABASE")
+TEST_URL = os.getenv("TEST_DATABASE")
 
 def init_db():
     '''Connecting to the DB'''
     with APP.app_context():
         conn = psycopg2.connect(URL)
         return conn
-def _init_db():
-    '''Connecting to the DB'''
-    with APP.app_context():
-        conn = psycopg2.connect(TEST_URL)
-        return conn
 
 def create_tables():
     '''Function for creating tables in database'''
     conn = init_db()
-    cur = conn.cursor()
-    queries = tables()
-
-    for query in queries:
-        cur.execute(query)
-        conn.commit()
-def create_test_tables():
-    '''Function for creating tables in database'''
-    conn = _init_db()
-    cur = conn.cursor()
+    cur = conn.cursor(cursor_factory=DictCursor)
     queries = tables()
 
     for query in queries:
@@ -44,8 +32,8 @@ def destroy_tables():
 
     queries = [users_db, questions_db, meetups_db]
 
-    conn = _init_db()
-    cur = conn.cursor()
+    conn = init_db()
+    cur = conn.cursor(cursor_factory=DictCursor)
 
     for query in queries:
         cur.execute(query)

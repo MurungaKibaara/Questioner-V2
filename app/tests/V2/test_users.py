@@ -10,7 +10,6 @@ class TestUsers(BaseTest):
         self.assertEqual(response.status_code, 201)
 
 
-
     def test_user_login(self):
         """Test user login endpoint"""
         response = self.login()

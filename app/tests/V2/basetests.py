@@ -2,7 +2,7 @@
 import unittest
 import json
 from app import create_app
-from app.api.V2.models.postgresqldatabase import destroy_tables, create_test_tables, _init_db
+from app.api.V2.models.postgresqldatabase import destroy_tables, init_db
 
 
 
@@ -11,13 +11,12 @@ class BaseTest(unittest.TestCase):
 
     def setUp(self):
         """Set up test variables"""
-        self.app = create_app(config_name="Testing")
+        self.app = create_app(config_name="testing")
         self.client = self.app.test_client()
         self.app_context = self.app
         self.app.testing = True
-        self.test_db = _init_db
+        self.test_db = init_db
 
-        create_test_tables()
 
         # User signup data
         self.signup_data = {

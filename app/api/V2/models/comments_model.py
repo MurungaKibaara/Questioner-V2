@@ -17,7 +17,7 @@ class CommentRecords():
             "comment": comment
         }
 
-        query = """INSERT INTO comments (comment) VALUES (%(comment)s);"""
+        query = """INSERT INTO comments (comment) VALUES (%(comment)s)"""
 
         cur = self.database.cursor()
         cur.execute(query, payload)

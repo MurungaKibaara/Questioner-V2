@@ -1,5 +1,6 @@
 '''Create database model to store user data'''
 import psycopg2
+from psycopg2.extras import DictCursor
 from flask import jsonify
 from app.api.V2.models.postgresqldatabase import init_db
 
@@ -19,14 +20,14 @@ class QuestionRecords():
 
         query = """INSERT INTO questions (question) VALUES (%(question)s);"""
 
-        cur = self.database.cursor()
+        cur = self.database.cursor(cursor_factory=DictCursor)
         cur.execute(query, payload)
         self.database.commit()
 
     def get_all_questions(self):
         '''Get all questions'''
         try:
-            cur = init_db().cursor()
+            cur = init_db().cursor(cursor_factory=DictCursor)
             cur.execute("""SELECT * FROM questions;""")
             data = cur.fetchall()
 
@@ -44,7 +45,7 @@ class QuestionRecords():
     def get_one_question(self, question_id):
         '''get one question'''
         try:
-            cur = init_db().cursor()
+            cur = init_db().cursor(cursor_factory=DictCursor)
             cur.execute("""  SELECT * FROM questions WHERE question_id = '%d'  """ %(question_id))
             data = cur.fetchone()
 
