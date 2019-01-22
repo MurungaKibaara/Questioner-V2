@@ -2,8 +2,7 @@
 import unittest
 import json
 from app import create_app
-from app.api.V2.models.postgresqldatabase import destroy_tables, init_db
-
+from app.api.V2.models.postgresqldatabase import init_db
 
 
 class BaseTest(unittest.TestCase):
@@ -15,7 +14,7 @@ class BaseTest(unittest.TestCase):
         self.client = self.app.test_client()
         self.app_context = self.app
         self.app.testing = True
-        self.test_db = init_db
+        self.database = init_db(env='testing')
 
 
         # User signup data
@@ -60,7 +59,7 @@ class BaseTest(unittest.TestCase):
         self.meetup_data = {
             "meetup_date": "28th January 2019",
             "location": "Roysambu",
-            "about": "Andela bootcamp week 2",
+            "about": "Andela bootcamp",
             "meetup_image": "image.png",
             "meetup_title": "Software development"
         }
@@ -94,8 +93,10 @@ class BaseTest(unittest.TestCase):
             '/api/V2/login',
             data=json.dumps(self.login_data),
             content_type='application/json')
+        print(user_resp)
 
         result = json.loads(user_resp.data.decode('utf-8'))
+        print("========================")
         token = ('Bearer ' + result["token"])
         header = {"Authorization": token}
 
@@ -130,7 +131,6 @@ class BaseTest(unittest.TestCase):
 
     def post_question(self):
         """post question"""
-
 
         user_resp = self.client.post(
             '/api/V2/login',
@@ -194,7 +194,6 @@ class BaseTest(unittest.TestCase):
             '/api/V2/questions/all/1')
         return res
 
-    def tearDown(self):
-        """Method to destroy test database tables"""
-
-        destroy_tables()
+    # def tearDown(self):
+    #     """Method to destroy test database tables"""
+    #     destroy_tables()

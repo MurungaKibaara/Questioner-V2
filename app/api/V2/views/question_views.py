@@ -3,8 +3,9 @@ import psycopg2
 from flask import Blueprint, request, jsonify, make_response
 from app.api.V2.models.question_models import QuestionRecords
 from app.api.V2.utils.validators import login_required
-from app.api.V2.models.postgresqldatabase import init_db
+from app.api.V2.models.postgres import Questioner
 
+INIT_DB = Questioner().init_db()
 
 POSTQUESTION = Blueprint('post_questions', __name__)
 GETQUESTIONS = Blueprint('get_question', __name__)
@@ -18,7 +19,7 @@ def post_questions():
     '''Allow users to post questions'''
     question = request.get_json()["question"]
 
-    cur = init_db().cursor()
+    cur = INIT_DB.cursor()
     cur.execute("""  SELECT question FROM questions WHERE question = '%s' """ % (question))
     data = cur.fetchone()
 
@@ -29,12 +30,12 @@ def post_questions():
         return jsonify({"Error":"question field cannot be empty"}), 401
 
     try:
-        result = QUESTION_RECORDS.questions(question)
+        QUESTION_RECORDS.questions(question)
 
         return make_response(jsonify({
             "status": "201",
-            "message": "success",
-            "User info": result}), 201)
+            "message": "success! Question posted"}), 201)
+
     except (psycopg2.Error) as error:
         return jsonify(error)
 

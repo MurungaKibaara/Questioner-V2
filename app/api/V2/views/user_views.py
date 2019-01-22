@@ -4,7 +4,9 @@ import psycopg2
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Blueprint, request, jsonify, make_response
 from app.api.V2.models.user_models import UserRecords, login_users
-from app.api.V2.models.postgresqldatabase import init_db
+from app.api.V2.models.postgres import Questioner
+
+INIT_DB = Questioner().init_db()
 
 REGISTRATION = Blueprint('user_registration', __name__)
 LOGIN = Blueprint('user_login', __name__)
@@ -27,12 +29,12 @@ def user_reg():
     imagefile = data["imagefile"]
 
     # Check whether a user exists
-    cur = init_db().cursor()
+    cur = INIT_DB.cursor()
     cur.execute("""  SELECT email FROM users WHERE email = '%s' """ % (email))
     data = cur.fetchone()
 
     if data is not None:
-        return jsonify({"Message": "User already exists"}), 403
+        return jsonify({"Message": "User already exists"}), 400
 
     if not firstname.strip():
         return jsonify({"Error":"firstname cannot be empty"}), 401

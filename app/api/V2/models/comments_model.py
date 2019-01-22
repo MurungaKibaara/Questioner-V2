@@ -1,14 +1,16 @@
 '''Create database model to store user data'''
 import psycopg2
 from flask import jsonify
-from app.api.V2.models.postgresqldatabase import init_db
+from app.api.V2.models.postgres import Questioner
+
+INIT_DB = Questioner().init_db()
 
 class CommentRecords():
     """ Create a model that stores users data"""
 
     def __init__(self):
         """initialize the database and argument variables"""
-        self.database = init_db()
+        self.database = INIT_DB
 
     def comments(self, comment):
         """ Add a new user to all user data """
@@ -26,9 +28,12 @@ class CommentRecords():
     def get_all_comments(self):
         '''Retrieve all comments'''
         try:
-            cur = init_db().cursor()
+            cur = INIT_DB.cursor()
             cur.execute("""SELECT * FROM comments;""")
             data = cur.fetchall()
+
+            if data is None:
+                return jsonify({"message":"No comment by that id"})
 
             comment_data = {
                 "status": "OK",
@@ -39,14 +44,17 @@ class CommentRecords():
         except (psycopg2.Error) as error:
             return jsonify(error)
 
-        return "No questions"
+        return jsonify({"message":"No comments avaailable for this question"})
 
     def get_one_comment(self, comment_id):
         '''Retrieve one comment'''
         try:
-            cur = init_db().cursor()
+            cur = INIT_DB.cursor()
             cur.execute("""  SELECT * FROM comments WHERE comment_id = '%d'  """ %(comment_id))
             data = cur.fetchone()
+
+            if data is None:
+                return jsonify({"message":"No comment by that id"})
 
             if data is None:
                 return ({"Message":"No Comment by that ID"}), 404

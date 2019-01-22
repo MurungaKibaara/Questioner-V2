@@ -3,6 +3,9 @@ import psycopg2
 from flask import Blueprint, request, jsonify
 from app.api.V2.models.meetup_models import MeetupRecords
 from app.api.V2.utils.validators import login_required
+from app.api.V2.models.postgres import Questioner
+
+INIT_DB = Questioner().init_db()
 
 POSTMEETUP = Blueprint('post_meetups', __name__)
 GETMEETUPS = Blueprint('get_meetups', __name__)
@@ -22,13 +25,35 @@ def post_meetups():
     meetup_date = data["meetup_date"]
     meetup_image = data["meetup_image"]
 
+    cur = INIT_DB.cursor()
+    cur.execute("""  SELECT * FROM meetups WHERE meetup_title = '%s' """ %(meetup_title))
+    data = cur.fetchall()
+
+    if data is not None:
+        return jsonify({"Message": "meetup already exists"}), 403
+
+    if not meetup_title.strip():
+        return jsonify({"Error":"question field cannot be empty"}), 401
+
+    if not about.strip():
+        return jsonify({"Error":"about field cannot be empty"}), 401
+
+    if not location.strip():
+        return jsonify({"Error":"question field cannot be empty"}), 401
+
+    if not meetup_date.strip():
+        return jsonify({"Error":"question field cannot be empty"}), 401
+
+    if not meetup_image.strip():
+        return jsonify({"Error":"question field cannot be empty"}), 401
+
+
     try:
-        result = MeetupRecords().meetups(meetup_date, about, meetup_title, location, meetup_image)
+        MeetupRecords().meetups(meetup_date, about, meetup_title, location, meetup_image)
 
         return jsonify({
             "status": "201",
-            "message": "success",
-            "info": result}), 201
+            "message": "success! Meetup posted"}), 201
     except (psycopg2.Error) as error:
         return jsonify(error)
 

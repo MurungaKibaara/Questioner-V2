@@ -7,10 +7,8 @@ from app.api.V2.views.user_views import REGISTRATION, LOGIN
 from app.api.V2.views.question_views import POSTQUESTION, GETQUESTIONS
 from app.api.V2.views.comment_views import POSTCOMMENTS, GETCOMMENTS
 from app.api.V2.views.meetup_views import POSTMEETUP, GETMEETUPS
-from app.api.V2.models.postgresqldatabase import create_tables
-from app.api.V2.models.postgresqldatabase import init_db
+from app.api.V2.models.postgres import Questioner, destroy_tables, create_tables
 
-create_tables()
 
 def create_app(config_name):
     '''create app'''
@@ -26,7 +24,9 @@ def create_app(config_name):
     app.register_blueprint(POSTMEETUP, url_prefix='/api/V2')
     app.register_blueprint(GETMEETUPS, url_prefix='/api/V2')
 
-    init_db()
+    with app.app_context():
+        print(Questioner().connect_db(app.config["DATABASE_URL"]))
+        create_tables()
 
     return app
 

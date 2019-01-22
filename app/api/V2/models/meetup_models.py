@@ -1,7 +1,9 @@
 '''Create database model to store user data'''
 import psycopg2
 from flask import jsonify
-from app.api.V2.models.postgresqldatabase import init_db
+from app.api.V2.models.postgres import Questioner
+
+INIT_DB = Questioner().init_db()
 
 
 class MeetupRecords():
@@ -9,7 +11,7 @@ class MeetupRecords():
 
     def __init__(self):
         """initialize the database and argument variables"""
-        self.database = init_db()
+        self.database = INIT_DB
 
     def meetups(self, meetup_date, about, meetup_title, location, meetupimage):
         """ Add a new user to all user data """
@@ -31,7 +33,7 @@ class MeetupRecords():
     def get_all_meetups(self):
         '''Get all meetups'''
         try:
-            cur = init_db().cursor()
+            cur = INIT_DB.cursor()
             cur.execute("""SELECT * FROM meetups;""")
             data = cur.fetchall()
 
@@ -49,7 +51,7 @@ class MeetupRecords():
     def get_one_meetup(self, meetup_id):
         '''get one question'''
         try:
-            cur = init_db().cursor()
+            cur = INIT_DB.cursor()
             cur.execute("""  SELECT * FROM meetups WHERE meetup_id = '%d'  """ %(meetup_id))
             data = cur.fetchone()
 

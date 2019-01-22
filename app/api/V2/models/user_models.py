@@ -5,17 +5,18 @@ from psycopg2.extras import DictCursor
 import jwt
 from werkzeug.security import check_password_hash
 from flask import jsonify, request
-from app.api.V2.models.postgresqldatabase import init_db
+from app.api.V2.models.postgres import Questioner
 from instance.config import Config
 JWT_SECRET = Config.SECRET_KEY
 
+INIT_DB = Questioner().init_db()
 
 class UserRecords():
     """ Create a model that stores users data"""
 
     def __init__(self):
         """initialize the database and argument variables"""
-        self.database = init_db()
+        self.database = INIT_DB
 
     def user_registration(self, firstname, lastname, email,
                           password, confirm_password, imagefile, role, phonenumber):
@@ -37,7 +38,7 @@ class UserRecords():
         (%(firstname)s, %(lastname)s, %(email)s,%(password)s,
         %(confirm_password)s, %(imagefile)s,%(role)s,%(phonenumber)s);"""
 
-        cur = self.database.cursor(cursor_factory=DictCursor)
+        cur = self.database.cursor()
         cur.execute(query, payload)
         self.database.commit()
 
@@ -47,10 +48,13 @@ def login_users():
         user_email = request.get_json()["email"]
         user_password = request.get_json()["password"]
 
-        cur = init_db().cursor(cursor_factory=DictCursor)
+        cur = INIT_DB.cursor(cursor_factory=DictCursor)
         cur.execute(
             """  SELECT password FROM users WHERE email = '%s' """ % (user_email))
         data = cur.fetchone()
+
+        if data is None:
+            return "No data here"
 
         password = data["password"]
 

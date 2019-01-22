@@ -1,23 +1,29 @@
 '''Postgres Database connection model'''
-import os
 import psycopg2
 from psycopg2.extras import DictCursor
-import flask
-APP = flask.Flask(__name__)
+# APP = flask.Flask(__name__)
 
-URL = os.getenv("DATABASE")
-TEST_URL = os.getenv("TEST_DATABASE")
 
-def init_db():
-    '''Connecting to the DB'''
-    with APP.app_context():
-        conn = psycopg2.connect(URL)
-        return conn
+class Questioner():
+    '''DB connection'''
+    def __init__(self, conn=None):
+        self.conn = conn
+
+    def connect_db(self, env):
+        '''Connecting to the DB'''
+        self.conn = psycopg2.connect(env)
+        print(self.conn)
+
+
+    def init_db(self):
+        '''Return created connection'''
+        return self.conn
+
 
 def create_tables():
-    '''Function for creating tables in database'''
-    conn = init_db()
-    cur = conn.cursor(cursor_factory=DictCursor)
+    '''Create tables in the database'''
+    conn = Questioner().init_db()
+    cur = conn.cursor()
     queries = tables()
 
     for query in queries:
@@ -32,7 +38,7 @@ def destroy_tables():
 
     queries = [users_db, questions_db, meetups_db]
 
-    conn = init_db()
+    conn = Questioner().init_db()
     cur = conn.cursor(cursor_factory=DictCursor)
 
     for query in queries:
@@ -77,4 +83,3 @@ def tables():
     queries = [users_db, meetups_db, comments_db, questions_db]
 
     return queries
-    
