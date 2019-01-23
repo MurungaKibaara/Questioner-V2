@@ -7,7 +7,7 @@ from app.api.V2.views.user_views import REGISTRATION, LOGIN
 from app.api.V2.views.question_views import POSTQUESTION, GETQUESTIONS
 from app.api.V2.views.comment_views import POSTCOMMENTS, GETCOMMENTS
 from app.api.V2.views.meetup_views import POSTMEETUP, GETMEETUPS
-from app.api.V2.models.postgres import Questioner, create_tables
+from app.api.V2.models.postgres import init_db, create_tables
 
 
 def create_app(config_name):
@@ -26,10 +26,9 @@ def create_app(config_name):
 
     with app.app_context():
         #Questioner().connect_db(app.config["DATABASE_URL"]))
-        Questioner.connect_db(app.config["DATABASE_URL"])
-        Questioner.init_db()
+        #Questioner.connect_db(app.config["DATABASE_URL"])
+        init_db()
         create_tables()
-
 
     return app
 

@@ -1,10 +1,9 @@
 '''Create database model to store user data'''
 import psycopg2
 from flask import jsonify
-from app.api.V2.models.postgres import Questioner
+from app.api.V2.models.postgres import init_db
 
-INIT_DB = Questioner().init_db()
-
+INIT_DB = init_db()
 
 class MeetupRecords():
     """ Create a model that stores users data"""

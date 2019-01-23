@@ -2,9 +2,9 @@
 import psycopg2
 #from psycopg2.extras import DictCursor
 from flask import jsonify
-from app.api.V2.models.postgres import Questioner
+from app.api.V2.models.postgres import init_db
 
-INIT_DB = Questioner().init_db()
+INIT_DB = init_db()
 
 class QuestionRecords():
     """ Create a model that stores users data"""

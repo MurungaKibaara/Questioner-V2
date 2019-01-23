@@ -3,15 +3,14 @@ import psycopg2
 from flask import Blueprint, request, jsonify
 from app.api.V2.models.meetup_models import MeetupRecords
 from app.api.V2.utils.validators import login_required
-from app.api.V2.models.postgres import Questioner
+from app.api.V2.models.postgres import init_db
 
-INIT_DB = Questioner().init_db()
+INIT_DB = init_db()
 
 POSTMEETUP = Blueprint('post_meetups', __name__)
 GETMEETUPS = Blueprint('get_meetups', __name__)
 
 MEETS = MeetupRecords()
-
 
 @POSTMEETUP.route('/meetups', methods=['POST'])
 @login_required

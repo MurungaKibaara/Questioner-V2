@@ -5,11 +5,11 @@ from psycopg2.extras import DictCursor
 import jwt
 from werkzeug.security import check_password_hash
 from flask import jsonify, request
-from app.api.V2.models.postgres import Questioner
+from app.api.V2.models.postgres import init_db
 from instance.config import Config
 JWT_SECRET = Config.SECRET_KEY
 
-INIT_DB = Questioner.init_db()
+INIT_DB = init_db()
 
 class UserRecords():
     """ Create a model that stores users data"""

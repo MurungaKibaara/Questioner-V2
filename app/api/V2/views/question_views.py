@@ -3,9 +3,9 @@ import psycopg2
 from flask import Blueprint, request, jsonify, make_response
 from app.api.V2.models.question_models import QuestionRecords
 from app.api.V2.utils.validators import login_required
-from app.api.V2.models.postgres import Questioner
+from app.api.V2.models.postgres import init_db
 
-INIT_DB = Questioner().init_db()
+INIT_DB = init_db()
 
 POSTQUESTION = Blueprint('post_questions', __name__)
 GETQUESTIONS = Blueprint('get_question', __name__)
