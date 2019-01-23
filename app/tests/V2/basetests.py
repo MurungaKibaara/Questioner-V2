@@ -2,7 +2,10 @@
 import unittest
 import json
 from app import create_app
-from app.api.V2.models.postgresqldatabase import init_db
+from app.api.V2.models.postgres import Questioner
+
+init_db = Questioner().init_db()
+
 
 
 class BaseTest(unittest.TestCase):
@@ -14,7 +17,7 @@ class BaseTest(unittest.TestCase):
         self.client = self.app.test_client()
         self.app_context = self.app
         self.app.testing = True
-        self.database = init_db(env='testing')
+        self.database = init_db()
 
 
         # User signup data

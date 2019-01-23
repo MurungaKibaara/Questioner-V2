@@ -25,8 +25,8 @@ def create_app(config_name):
     app.register_blueprint(GETMEETUPS, url_prefix='/api/V2')
 
     with app.app_context():
-        Questioner().connect_db(app.config["DATABASE_URL"])
-        destroy_tables()
+        #Questioner().connect_db(app.config["DATABASE_URL"]))
+        Questioner(app.config["DATABASE_URL"])
 
     return app
 
