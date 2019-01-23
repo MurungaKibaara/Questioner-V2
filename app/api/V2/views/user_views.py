@@ -3,13 +3,14 @@ import re
 import psycopg2
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Blueprint, request, jsonify, make_response
-from app.api.V2.models.user_models import UserRecords, login_users
+from app.api.V2.models.user_models import UserRecords, login_users, up_vote
 from app.api.V2.models.postgres import Questioner
 
 INIT_DB = Questioner().init_db()
 
 REGISTRATION = Blueprint('user_registration', __name__)
 LOGIN = Blueprint('user_login', __name__)
+VOTE = Blueprint('votes', __name__)
 
 USER_RECORDS = UserRecords()
 
@@ -77,3 +78,8 @@ def user_reg():
 def login():
     '''Allow users to log in'''
     return login_users()
+
+@VOTE.route('/questions/<int:question_id>/upvote', methods=['PATCH'])
+def upvote(question_id):
+    '''Upvote a question'''
+    return up_vote(question_id)

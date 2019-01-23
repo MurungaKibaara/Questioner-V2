@@ -9,7 +9,7 @@ from app.api.V2.models.postgres import Questioner
 from instance.config import Config
 JWT_SECRET = Config.SECRET_KEY
 
-INIT_DB = Questioner.cursor()
+INIT_DB = Questioner.init_db()
 
 class UserRecords():
     """ Create a model that stores users data"""
@@ -92,3 +92,19 @@ def verify_token(auth_token):
         return 'Invalid token. Please log in again.'
 
     return 'Could not be verified'
+
+def up_vote(question_id):
+    '''A user can upvote'''
+    cur = INIT_DB.cursor(cursor_factory=DictCursor)
+    cur.execute(
+        """  SELECT * FROM questions WHERE email = '%s' """ % (question_id))
+    data = cur.fetchone()
+    question = data["question"]
+
+    votes = 0
+
+    if data is None:
+        return "No data here"
+    if question == question_id:
+        votes = votes + 1
+        return votes

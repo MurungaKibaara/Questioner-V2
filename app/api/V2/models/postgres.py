@@ -1,33 +1,35 @@
 '''Postgres Database connection model'''
+import os
 import psycopg2
-
+URL = os.getenv("DATABASE")
 
 class Questioner:
     '''DB connection'''
+    @classmethod
+    def connect_db(cls, url):
+        '''Connect to database'''
+        cls.connection = psycopg2.connect(url)
 
-    def __init__(self, url, CONN=None, CUR=None):
-        global CONN, CUR
-        CONN = psycopg2.connect(url)
-        
-    def cursor(self):
-        global CUR
-        CUR = CONN.cursor()
+    @classmethod
+    def init_db(cls):
+        '''Return the connection'''
+        return cls.connection
 
-    def create_tables(self):
-        '''Function for creating tables'''
+def create_tables():
+    '''Function for creating tables'''
 
-        queries = tables() #[users_db, questions_db, meetups_db]
+    queries = tables()
 
-        for query in queries:
-            CUR.execute(query)
-            CONN.commit()
+    for query in queries:
+        cur = Questioner.init_db().cursor()
+        cur.execute(query)
+        Questioner.init_db().commit()
 
 #     def drop_tables(self):
 #         '''Function for dropping tables in tests'''
 #         users_db = """DROP TABLE IF EXISTS users CASCADE"""
 #         questions_db = """DROP TABLE IF EXISTS questions CASCADE"""
 #         meetups_db = """DROP TABLE IF EXISTS meetups CASCADE"""
-
 
 def tables():
 

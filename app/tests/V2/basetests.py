@@ -13,11 +13,11 @@ class BaseTest(unittest.TestCase):
 
     def setUp(self):
         """Set up test variables"""
-        self.app = create_app(config_name="testing")
+        self.app = create_app("testing")
         self.client = self.app.test_client()
         self.app_context = self.app
         self.app.testing = True
-        self.database = init_db()
+        self.database = init_db
 
 
         # User signup data
