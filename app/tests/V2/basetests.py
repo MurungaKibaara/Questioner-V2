@@ -1,12 +1,11 @@
 '''Base test class for tests'''
 import unittest
 import json
+#import pytest
 from app import create_app
-from app.api.V2.models.postgres import Questioner
+from app.api.V2.models.postgres import init_db
 
-init_db = Questioner().init_db()
-
-
+INIT_DB = init_db()
 
 class BaseTest(unittest.TestCase):
     """Unittests for version 2"""
@@ -17,7 +16,7 @@ class BaseTest(unittest.TestCase):
         self.client = self.app.test_client()
         self.app_context = self.app
         self.app.testing = True
-        self.database = init_db
+        self.database = INIT_DB
 
 
         # User signup data
@@ -29,6 +28,70 @@ class BaseTest(unittest.TestCase):
             "password": "WAssup2345",
             "confirm_password": "WAssup2345",
             "imagefile": "imagefile.jpg"
+        }
+
+        self.signup_data1 = {
+            "firstname": "",
+            "lastname": "Kibaara",
+            "phonenumber": "martial",
+            "email": "ephykibrwwwwwwwwwwwwwa@gmail.com",
+            "password": "WAssup2345",
+            "confirm_password": "WAssup2345",
+            "imagefile": "imagefile.jpg"
+        }
+        self.signup_data2 = {
+            "firstname": "Ephy",
+            "lastname": "",
+            "phonenumber": "martial",
+            "email": "ephykibrwwwwwwwwwwwwwa@gmail.com",
+            "password": "WAssup2345",
+            "confirm_password": "WAssup2345",
+            "imagefile": "imagefile.jpg"
+        }
+        self.signup_data3 = {
+            "firstname": "Ephy",
+            "lastname": "Kibaara",
+            "phonenumber": "",
+            "email": "ephykibrwwwwwwwwwwwwwa@gmail.com",
+            "password": "WAssup2345",
+            "confirm_password": "WAssup2345",
+            "imagefile": "imagefile.jpg"
+        }
+        self.signup_data4 = {
+            "firstname": "Ephy",
+            "lastname": "Kibaara",
+            "phonenumber": "martial",
+            "email": "",
+            "password": "",
+            "confirm_password": "WAssup2345",
+            "imagefile": "imagefile.jpg"
+        }
+        self.signup_data5 = {
+            "firstname": "Ephy",
+            "lastname": "Kibaara",
+            "phonenumber": "martial",
+            "email": "ephykibrwwwwwwwwwwwwwagmail.com",
+            "password": "WAssup2345",
+            "confirm_password": "",
+            "imagefile": "imagefile.jpg"
+        }
+        self.signup_data6 = {
+            "firstname": "Ephy",
+            "lastname": "Kibaara",
+            "phonenumber": "martial",
+            "email": "ephykibrwwwwwwwwwwwwwa@gmail.com",
+            "password": "WAssup2345",
+            "confirm_password": "ssup2345",
+            "imagefile": "imagefile.jpg"
+        }
+        self.signup_data7 = {
+            "firstname": "Ephy",
+            "lastname": "Kibaara",
+            "phonenumber": "martial",
+            "email": "ephykibrwwwwwwwwwwwwwa@gmail.com",
+            "password": "WAssup2345",
+            "confirm_password": "WAssup2345",
+            "imagefile": ""
         }
 
         self.duplicate_user_data = {
