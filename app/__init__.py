@@ -4,7 +4,7 @@ from flask import Flask
 from dotenv import load_dotenv
 from instance.config import APP_CONFIG, TestingConfig, DevelopmentConfig
 from app.api.V2.views.user_views import REGISTRATION, LOGIN
-from app.api.V2.views.question_views import POSTQUESTION, GETQUESTIONS
+from app.api.V2.views.question_views import POSTQUESTION, GETQUESTIONS, VOTE
 from app.api.V2.views.comment_views import POSTCOMMENTS, GETCOMMENTS
 from app.api.V2.views.meetup_views import POSTMEETUP, GETMEETUPS
 from app.api.V2.models.postgres import init_db, create_tables
@@ -18,6 +18,7 @@ def create_app(config_name):
     app.register_blueprint(REGISTRATION, url_prefix='/api/V2')
     app.register_blueprint(LOGIN, url_prefix='/api/V2')
     app.register_blueprint(POSTQUESTION, url_prefix='/api/V2')
+    app.register_blueprint(VOTE, url_prefix='/api/V2')
     app.register_blueprint(GETQUESTIONS, url_prefix='/api/V2')
     app.register_blueprint(POSTCOMMENTS, url_prefix='/api/V2')
     app.register_blueprint(GETCOMMENTS, url_prefix='/api/V2')

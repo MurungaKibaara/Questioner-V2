@@ -29,7 +29,7 @@ def post_meetups():
     data = cur.fetchall()
 
     if data is not None:
-        return jsonify({"Message": "meetup already exists"}), 403
+        return jsonify({"Message": "meetup already exists"}), 400
 
     if not meetup_title.strip():
         return jsonify({"Error":"question field cannot be empty"}), 401
