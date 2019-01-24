@@ -1,6 +1,5 @@
 '''Create database model to store user data'''
 import psycopg2
-from psycopg2.extras import DictCursor
 from flask import jsonify
 from app.api.V2.models.postgres import init_db
 
@@ -29,10 +28,10 @@ class QuestionRecords():
             "question": question,
             "votes":0
         }
-        print(payload["question"])
+
         try:
             cur = init_db().cursor()
-            query = """ INSERT INTO questions (question) VALUES ''%s;""" %(question)
+            query = """ INSERT INTO questions (question) VALUES %s;""" %(question)
             cur.execute(query, payload)
             init_db().commit()
 
@@ -92,6 +91,27 @@ class QuestionRecords():
         upvote_query = """ UPDATE questions SET votes = %d """ %(vote)
         cur = self.database.cursor()
         cur.execute(upvote_query)
+        self.database.commit()
+
+        for question in data:
+            return jsonify(question)
+
+        return "Not upvoted"
+
+    def down_vote(self, question_id):
+        '''A user can upvote'''
+        cur = INIT_DB.cursor()
+        cur.execute(
+            """  SELECT votes FROM questions WHERE question_id = '%d' """ % (question_id))
+        data = cur.fetchone()
+
+        if data is None:
+            return jsonify({"Message": "No data here"})
+
+        vote = data[0] - 1
+        downvote_query = """ UPDATE questions SET votes = %d """ %(vote)
+        cur = self.database.cursor()
+        cur.execute(downvote_query)
         self.database.commit()
 
         for question in data:

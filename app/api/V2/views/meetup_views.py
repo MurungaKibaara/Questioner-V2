@@ -1,4 +1,5 @@
 '''Questions endpoints'''
+import re
 import psycopg2
 from flask import Blueprint, request, jsonify
 from app.api.V2.models.meetup_models import MeetupRecords
@@ -25,8 +26,8 @@ def post_meetups():
     meetup_image = data["meetup_image"]
 
     cur = INIT_DB.cursor()
-    cur.execute("""  SELECT * FROM meetups WHERE meetup_title = '%s' """ %(meetup_title))
-    data = cur.fetchall()
+    cur.execute("""  SELECT meetup_title FROM meetups WHERE meetup_title = '%s' """ %(meetup_title))
+    data = cur.fetchone()
 
     if data is not None:
         return jsonify({"Message": "meetup already exists"}), 400
@@ -34,11 +35,19 @@ def post_meetups():
     if not meetup_title.strip():
         return jsonify({"Error":"question field cannot be empty"}), 401
 
+    if not re.match(r"^[A-Za-z][a-zA-Z]", meetup_title):
+        return jsonify({"error":"input valid meetup_title"})
+
     if not about.strip():
         return jsonify({"Error":"about field cannot be empty"}), 401
 
+    if not re.match(r"^[A-Za-z][a-zA-Z]", about):
+        return jsonify({"error":"input valid about"})
+
     if not location.strip():
         return jsonify({"Error":"question field cannot be empty"}), 401
+    if not re.match(r"^[A-Za-z][a-zA-Z]", location):
+        return jsonify({"error":"input valid location"})
 
     if not meetup_date.strip():
         return jsonify({"Error":"question field cannot be empty"}), 401
