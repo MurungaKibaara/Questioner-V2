@@ -28,28 +28,14 @@ def user_reg():
     confirm_password = data["confirm_password"]
     imagefile = data["imagefile"]
 
-    # Check whether a user exists
-    cur = INIT_DB.cursor()
-    cur.execute("""  SELECT email FROM users WHERE email = '%s' """ % (email))
-    data = cur.fetchone()
-
-    if data is not None:
-        return jsonify({"Message": "User already exists"}), 400
-
     if not firstname.strip():
         return jsonify({"Error":"firstname cannot be empty"}), 401
-
-    if  len(firstname) < 4:
-        return jsonify({"Error":"Input valid length"}), 401
 
     if not re.match(r"^[A-Za-z][a-zA-Z]", firstname):
         return jsonify({"error":"input valid firstname"}), 400
 
     if not lastname.strip():
         return jsonify({"Error":"lastname cannot be empty"}), 401
-
-    if  len(lastname) < 4:
-        return jsonify({"Error":"Input valid length"}), 401
 
     if not re.match(r"^[A-Za-z][a-zA-Z]", lastname):
         return jsonify({"error":"input valid lastname"}), 400
@@ -66,6 +52,9 @@ def user_reg():
     if not password.strip():
         return jsonify({"Error":"password cannot be empty"}), 401
 
+    if not re.match(r'[A-Za-z0-9@#$]{6,12}', password):
+        return jsonify({"Error":"Input a stronger password"}), 401
+
     if not confirm_password.strip():
         return jsonify({"Error":"confirm password cannot be empty"}), 401
 
@@ -74,6 +63,14 @@ def user_reg():
 
     if not check_password_hash(password, confirm_password):
         return jsonify({"Error":"passwords did not match"}), 401
+
+    # Check whether a user exists
+    cur = INIT_DB.cursor()
+    cur.execute("""  SELECT email FROM users WHERE email = '%s' """ % (email))
+    data = cur.fetchone()
+
+    if data is not None:
+        return jsonify({"Message": "User already exists"}), 400
 
 
     try:
