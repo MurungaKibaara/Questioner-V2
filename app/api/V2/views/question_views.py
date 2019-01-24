@@ -1,6 +1,7 @@
 '''Questions endpoints'''
+import re
 import psycopg2
-from flask import Blueprint, request, jsonify, make_response, json
+from flask import Blueprint, request, jsonify, make_response
 from app.api.V2.models.question_models import QuestionRecords
 from app.api.V2.utils.validators import login_required
 from app.api.V2.models.postgres import init_db
@@ -31,6 +32,9 @@ def post_questions(meetup_id):
     if not question.strip():
         return jsonify({"Error":"question field cannot be empty"}), 401
 
+    if not re.match(r"^[A-Za-z][a-zA-Z]", question):
+        return jsonify({"error":"input valid question"})
+
     try:
         data = QUESTION_RECORDS.questions(question, meetup_id)
         print(data)
@@ -58,3 +62,8 @@ def getone(question_id):
 def upvote(question_id):
     '''Upvote a question'''
     return QUESTION_RECORDS.up_vote(question_id)
+
+@VOTE.route('/questions/<int:question_id>/downvote', methods=['PATCH'])
+def downvote(question_id):
+    '''Upvote a question'''
+    return QUESTION_RECORDS.down_vote(question_id)

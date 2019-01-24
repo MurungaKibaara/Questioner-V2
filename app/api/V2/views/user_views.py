@@ -39,11 +39,26 @@ def user_reg():
     if not firstname.strip():
         return jsonify({"Error":"firstname cannot be empty"}), 401
 
+    if  len(firstname) < 4:
+        return jsonify({"Error":"Input valid length"}), 401
+
+    if not re.match(r"^[A-Za-z][a-zA-Z]", firstname):
+        return jsonify({"error":"input valid firstname"}), 400
+
     if not lastname.strip():
         return jsonify({"Error":"lastname cannot be empty"}), 401
 
+    if  len(lastname) < 4:
+        return jsonify({"Error":"Input valid length"}), 401
+
+    if not re.match(r"^[A-Za-z][a-zA-Z]", lastname):
+        return jsonify({"error":"input valid lastname"}), 400
+
     if not phonenumber.strip():
         return jsonify({"Error":"phonenumber cannot be empty"}), 401
+
+    if not re.match(r"^[0-9]", phonenumber):
+        return jsonify({"error":"input valid phonenumber"}), 400
 
     if not email.strip():
         return jsonify({"Error":"email cannot be empty"}), 401
@@ -55,7 +70,7 @@ def user_reg():
         return jsonify({"Error":"confirm password cannot be empty"}), 401
 
     if not re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$", email):
-        return jsonify({"error":"input valid email"})
+        return jsonify({"error":"input valid email"}), 400
 
     if not check_password_hash(password, confirm_password):
         return jsonify({"Error":"passwords did not match"}), 401
