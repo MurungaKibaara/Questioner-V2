@@ -23,8 +23,8 @@ class BaseTest(unittest.TestCase):
         self.signup_data = {
             "firstname": "Ephy",
             "lastname": "Kibaara",
-            "phonenumber": "martial",
-            "email": "ephykibrwwwwwwwwwwwwwa@gmail.com",
+            "phonenumber": "074321234",
+            "email": "ephykibrwwwa@gmail.com",
             "password": "WAssup2345",
             "confirm_password": "WAssup2345",
             "imagefile": "imagefile.jpg"
@@ -88,7 +88,7 @@ class BaseTest(unittest.TestCase):
             "firstname": "Ephy",
             "lastname": "Kibaara",
             "phonenumber": "martial",
-            "email": "ephykibrwwwwwwwwwwwwwa@gmail.com",
+            "email": "ephykibaara@gmail.com",
             "password": "WAssup2345",
             "confirm_password": "WAssup2345",
             "imagefile": ""
@@ -107,7 +107,7 @@ class BaseTest(unittest.TestCase):
         # User login data
 
         self.login_data = {
-            "email": "ephykibaara@gmail.com",
+            "email": "ephykibrwwwa@gmail.com",
             "password": "WAssup2345"
         }
 
@@ -130,9 +130,6 @@ class BaseTest(unittest.TestCase):
             "meetup_title": "Software development"
         }
 
-
-    # Tests involving user Registration and login
-
     def registration(self):
         '''Register a new user'''
         res = self.client.post(
@@ -152,19 +149,19 @@ class BaseTest(unittest.TestCase):
 
    # Tests involving meetups
 
+    def user_token(self):
+        '''Create user token'''
+        user_resp = self.login()
+        print("\\\\\\\\\\\\\\\\\\\\\\\\\\")
+        result = json.loads(user_resp.data.decode('utf-8'))
+        token = result["token"]
+        header = {"Authorization": token}
+        print(header)
+        return header
+
     def create_meetup(self):
         '''Create a meetup'''
-
-        user_resp = self.client.post(
-            '/api/V2/login',
-            data=json.dumps(self.login_data),
-            content_type='application/json')
-        print(user_resp)
-
-        result = json.loads(user_resp.data.decode('utf-8'))
-        print("========================")
-        token = ('Bearer ' + result["token"])
-        header = {"Authorization": token}
+        header = self.user_token()
 
         res = self.client.post(
             '/api/V2/meetups', headers=header,
@@ -190,7 +187,7 @@ class BaseTest(unittest.TestCase):
         '''Test for non existent meetup'''
 
         res = self.client.get(
-            '/api/V2/meetups/10')
+            '/api/V2/meetups/100')
         return res
 
     # Tests involving questions

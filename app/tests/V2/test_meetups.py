@@ -6,13 +6,11 @@ class TestMeetups(BaseTest):
 
     def test_create_meetup(self):
         '''Test create meetup endpoint'''
-        self.registration()
         response = self.create_meetup()
         self.assertEqual(response.status_code, 201)
 
     def test_get_all_meetups(self):
         '''Test get all meetups endpoint'''
-        self.registration()
         self.create_meetup()
         response = self.get_all_meetups()
         self.assertEqual(response.status_code, 200)

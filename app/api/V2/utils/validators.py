@@ -14,7 +14,7 @@ def login_required(auth_function):
         auth_header = request.headers.get('Authorization')
 
         if auth_header:
-            auth_token = auth_header.split("Bearer" )[1]
+            auth_token = auth_header.split( )[0]
 
         if not auth_token:
             return jsonify({"message": "Token required"}), 401

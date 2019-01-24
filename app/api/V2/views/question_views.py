@@ -30,10 +30,10 @@ def post_questions(meetup_id):
         return jsonify({"Message": "Question already exists"}), 400
 
     if not question.strip():
-        return jsonify({"Error":"question field cannot be empty"}), 401
+        return jsonify({"Error":"question field cannot be empty"}), 400
 
     if not re.match(r"^[A-Za-z][a-zA-Z]", question):
-        return jsonify({"error":"input valid question"})
+        return jsonify({"error":"input valid question"}), 400
 
     try:
         data = QUESTION_RECORDS.questions(question, meetup_id)
