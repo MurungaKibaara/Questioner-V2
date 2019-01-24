@@ -3,7 +3,7 @@ from .basetests import BaseTest
 
 class TestUsers(BaseTest):
     """Test user registration and login"""
-    def test_user_registration():
+    def test_user_registration(self):
         response = self.registration()
         self.assertEqual(response.status_code, 201)
 
