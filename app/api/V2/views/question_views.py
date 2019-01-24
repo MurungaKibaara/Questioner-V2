@@ -21,6 +21,12 @@ def post_questions(meetup_id):
     '''Allow users to post questions'''
     question = request.get_json()["question"]
 
+    if not question.strip():
+        return jsonify({"Error":"question field cannot be empty"}), 400
+
+    if not re.match(r"^[A-Za-z][a-zA-Z]", question):
+        return jsonify({"error":"input valid question"}), 400
+
     cur = INIT_DB.cursor()
     cur.execute(""" SELECT question FROM questions WHERE question = '%s' """ % (question))
 
@@ -28,12 +34,6 @@ def post_questions(meetup_id):
 
     if data is not None:
         return jsonify({"Message": "Question already exists"}), 400
-
-    if not question.strip():
-        return jsonify({"Error":"question field cannot be empty"}), 400
-
-    if not re.match(r"^[A-Za-z][a-zA-Z]", question):
-        return jsonify({"error":"input valid question"}), 400
 
     try:
         data = QUESTION_RECORDS.questions(question, meetup_id)
@@ -47,13 +47,13 @@ def post_questions(meetup_id):
         print(error)
         return jsonify({"Error":"Programming error!"})
 
-@GETQUESTIONS.route('/questions/all', methods=['GET'])
+@GETQUESTIONS.route('/questions', methods=['GET'])
 def getall():
     '''Allow users to get all question'''
     return QUESTION_RECORDS.get_all_questions()
 
 
-@GETQUESTIONS.route('/questions/all/<int:question_id>/', methods=['GET'])
+@GETQUESTIONS.route('/questions/<int:question_id>/', methods=['GET'])
 def getone(question_id):
     '''Allow users to get one question'''
     return QUESTION_RECORDS.get_one_question(question_id)

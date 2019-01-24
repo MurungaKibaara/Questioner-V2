@@ -7,6 +7,7 @@ from app.api.V2.models.postgres import init_db
 
 INIT_DB = init_db()
 
+
 class BaseTest(unittest.TestCase):
     """Unittests for version 2"""
 
@@ -17,7 +18,6 @@ class BaseTest(unittest.TestCase):
         self.app_context = self.app
         self.app.testing = True
         self.database = INIT_DB
-
 
         # User signup data
         self.signup_data = {
@@ -33,7 +33,7 @@ class BaseTest(unittest.TestCase):
         self.signup_data1 = {
             "firstname": "",
             "lastname": "Kibaara",
-            "phonenumber": "martial",
+            "phonenumber": "0780997711",
             "email": "ephykibrwwwwwwwwwwwwwa@gmail.com",
             "password": "WAssup2345",
             "confirm_password": "WAssup2345",
@@ -42,7 +42,7 @@ class BaseTest(unittest.TestCase):
         self.signup_data2 = {
             "firstname": "Ephy",
             "lastname": "",
-            "phonenumber": "martial",
+            "phonenumber": "0780997711",
             "email": "ephykibrwwwwwwwwwwwwwa@gmail.com",
             "password": "WAssup2345",
             "confirm_password": "WAssup2345",
@@ -51,7 +51,7 @@ class BaseTest(unittest.TestCase):
         self.signup_data3 = {
             "firstname": "Ephy",
             "lastname": "Kibaara",
-            "phonenumber": "",
+            "phonenumber": " ",
             "email": "ephykibrwwwwwwwwwwwwwa@gmail.com",
             "password": "WAssup2345",
             "confirm_password": "WAssup2345",
@@ -60,25 +60,43 @@ class BaseTest(unittest.TestCase):
         self.signup_data4 = {
             "firstname": "Ephy",
             "lastname": "Kibaara",
-            "phonenumber": "martial",
+            "phonenumber": "0780997711",
             "email": "",
-            "password": "",
+            "password": "WAssup2345",
             "confirm_password": "WAssup2345",
             "imagefile": "imagefile.jpg"
         }
         self.signup_data5 = {
             "firstname": "Ephy",
             "lastname": "Kibaara",
-            "phonenumber": "martial",
-            "email": "ephykibrwwwwwwwwwwwwwagmail.com",
+            "phonenumber": "0780997711",
+            "email": "ephykibrwwwwwwwwwwwwwa@gmail.com",
             "password": "WAssup2345",
             "confirm_password": "",
+            "imagefile": "imagefile.jpg"
+        }
+        self.signup_data8 = {
+            "firstname": "Ephy",
+            "lastname": "Kibaara",
+            "phonenumber": "0780997711",
+            "email": "ephykibrwwwwwwwwwwwwwa@gmail.com",
+            "password": "",
+            "confirm_password": "WWassup2345",
+            "imagefile": "imagefile.jpg"
+        }
+        self.signup_data9 = {
+            "firstname": "Ephy",
+            "lastname": "Kibaara",
+            "phonenumber": "0780997711",
+            "email": "ephykibrwwwwwwwwwwwwwagmail.com",
+            "password": "WAssup2345",
+            "confirm_password": "Wassup2345",
             "imagefile": "imagefile.jpg"
         }
         self.signup_data6 = {
             "firstname": "Ephy",
             "lastname": "Kibaara",
-            "phonenumber": "martial",
+            "phonenumber": "0780997711",
             "email": "ephykibrwwwwwwwwwwwwwa@gmail.com",
             "password": "WAssup2345",
             "confirm_password": "ssup2345",
@@ -138,6 +156,78 @@ class BaseTest(unittest.TestCase):
             content_type='application/json')
         return res
 
+    def missing_first_name(self):
+        '''Register a new user'''
+        res = self.client.post(
+            '/api/V2/registration',
+            data=json.dumps(self.signup_data1),
+            content_type='application/json')
+        return res
+
+    def missing_last_name(self):
+        '''Register a new user'''
+        res = self.client.post(
+            '/api/V2/registration',
+            data=json.dumps(self.signup_data2),
+            content_type='application/json')
+        return res
+
+    def missing_phone_number(self):
+        '''Register a new user'''
+        res = self.client.post(
+            '/api/V2/registration',
+            data=json.dumps(self.signup_data3),
+            content_type='application/json')
+        return res
+
+    def missing_email(self):
+        '''Register a new user'''
+        res = self.client.post(
+            '/api/V2/registration',
+            data=json.dumps(self.signup_data3),
+            content_type='application/json')
+        return res
+
+    def missing_password(self):
+        '''Register a new user'''
+        res = self.client.post(
+            '/api/V2/registration',
+            data=json.dumps(self.signup_data8),
+            content_type='application/json')
+        return res
+
+    def missing_image(self):
+        '''Register a new user'''
+        res = self.client.post(
+            '/api/V2/registration',
+            data=json.dumps(self.signup_data7),
+            content_type='application/json')
+        return res
+
+    def missing_confirm_password(self):
+        '''Register a new user'''
+        res = self.client.post(
+            '/api/V2/registration',
+            data=json.dumps(self.signup_data5),
+            content_type='application/json')
+        return res
+
+    def unmatched_passwords(self):
+        '''Register a new user'''
+        res = self.client.post(
+            '/api/V2/registration',
+            data=json.dumps(self.signup_data6),
+            content_type='application/json')
+        return res
+
+    def invalid_email(self):
+        '''Register a new user'''
+        res = self.client.post(
+            '/api/V2/registration',
+            data=json.dumps(self.signup_data9),
+            content_type='application/json')
+        return res
+
     def login(self):
         """login a registered user"""
 
@@ -152,11 +242,9 @@ class BaseTest(unittest.TestCase):
     def user_token(self):
         '''Create user token'''
         user_resp = self.login()
-        print("\\\\\\\\\\\\\\\\\\\\\\\\\\")
         result = json.loads(user_resp.data.decode('utf-8'))
         token = result["token"]
         header = {"Authorization": token}
-        print(header)
         return header
 
     def create_meetup(self):
@@ -194,27 +282,21 @@ class BaseTest(unittest.TestCase):
 
     def post_question(self):
         """post question"""
-
-        user_resp = self.client.post(
-            '/api/V2/login',
-            data=json.dumps(self.login_data),
-            content_type='application/json')
-
-        result = json.loads(user_resp.data.decode('utf-8'))
-        token = ('Bearer ' + result["token"])
-        header = {"Authorization": token}
+        self.login()
+        header = self.user_token()
 
         res = self.client.post(
-            '/api/V2/questions', headers=header,
+            '/api/V2/1/questions', headers=header,
             data=json.dumps(self.question_data), content_type='application/json')
         return res
 
     def post_empty_question_field(self):
         '''Test for empty field in question'''
-
+        self.login()
+        header = self.user_token()
         res = self.client.post(
-            '/api/V2/questions',
-            data=json.dumps(self.empty_question_field),
+            '/api/V2/1/questions',
+            data=json.dumps(self.empty_question_field), headers=header,
             content_type='application/json')
         return res
 
@@ -222,14 +304,19 @@ class BaseTest(unittest.TestCase):
         '''Get all questions'''
 
         res = self.client.get(
-            '/api/V2/questions/all')
+            '/api/V2/questions')
         return res
 
     def get_one_question(self):
         '''get a specific question'''
-
         res = self.client.get(
-            '/api/V2/questions/all/1')
+            '/api/V2/questions/1/')
+        return res
+
+    def get_one_question_doesnt_exist(self):
+        '''get a specific question'''
+        res = self.client.get(
+            '/api/V2/questions/431/')
         return res
 
     # Tests involving comments
