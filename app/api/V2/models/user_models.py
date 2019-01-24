@@ -54,7 +54,7 @@ def login_users():
         data = cur.fetchone()
 
         if data is None:
-            return "No data here"
+            return jsonify({"message":"No data here"})
 
         password = data["password"]
 
