@@ -57,6 +57,7 @@ def tables():
             user_id serial PRIMARY KEY NOT NULL,
             firstname character varying(1000) NOT NULL,
             lastname character varying(1000) NOT NULL,
+            phonenumber character varying(1000) NOT NULL,
             role character varying(1000) NOT NULL,
             email character varying(1000) NOT NULL,
             password character varying(1000) NOT NULL,
