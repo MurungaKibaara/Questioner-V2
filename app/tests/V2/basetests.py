@@ -138,6 +138,16 @@ class BaseTest(unittest.TestCase):
             "question": " "
         }
 
+        # comment data
+
+        self.comment_data = {
+            "comment": "It is part of machine learning"
+        }
+        self.empty_comment_field = {
+            "comment": " "
+        }
+
+
         # Meetup data
 
         self.meetup_data = {
@@ -401,10 +411,23 @@ class BaseTest(unittest.TestCase):
 
     def post_comments(self):
         '''Post a comment'''
+        self.registration()
+        header = self.user_token()
 
         res = self.client.post(
             '/api/V2/comments',
-            data=json.dumps(self.question_data),
+            data=json.dumps(self.comment_data), headers=header,
+            content_type='application/json')
+        return res
+
+    def post_empty_comment_field(self):
+        '''Test for empty field in question'''
+        self.registration()
+        self.login()
+        header = self.user_token()
+        res = self.client.post(
+            '/api/V2/comments',
+            data=json.dumps(self.empty_comment_field), headers=header,
             content_type='application/json')
         return res
 
@@ -412,14 +435,20 @@ class BaseTest(unittest.TestCase):
         '''Get all questions'''
 
         res = self.client.get(
-            '/api/V2/questions/all')
+            '/api/V2/comments')
         return res
 
     def get_one_comment(self):
         '''get a apecific question'''
 
         res = self.client.get(
-            '/api/V2/questions/all/1')
+            '/api/V2/comments/1')
+        return res
+
+    def get_one_comment_doesnt_exist(self):
+        '''get a specific question'''
+        res = self.client.get(
+            '/api/V2/comments/431/')
         return res
 
     # def tearDown(self):

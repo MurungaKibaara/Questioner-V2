@@ -32,7 +32,7 @@ class TestUsers(BaseTest):
     def test_missing_image(self):
         """Test missing field"""
         response = self.missing_image()
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 401)
 
     def test_missing_password(self):
         """Test missing field"""
