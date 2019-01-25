@@ -147,6 +147,41 @@ class BaseTest(unittest.TestCase):
             "meetup_image": "image.png",
             "meetup_title": "Software development"
         }
+        self.meetup_data1 = {
+            "meetup_date": "",
+            "location": "Roysambu",
+            "about": "Andela bootcamp",
+            "meetup_image": "image.png",
+            "meetup_title": "Software development"
+        }
+        self.meetup_data2 = {
+            "meetup_date": "28th January 2019",
+            "location": "",
+            "about": "Andela bootcamp",
+            "meetup_image": "image.png",
+            "meetup_title": "Software development"
+        }
+        self.meetup_data3 = {
+            "meetup_date": "28th January 2019",
+            "location": "Roysambu",
+            "about": "",
+            "meetup_image": "image.png",
+            "meetup_title": "Software development"
+        }
+        self.meetup_data4 = {
+            "meetup_date": "28th January 2019",
+            "location": "Roysambu",
+            "about": "Andela bootcamp",
+            "meetup_image": "",
+            "meetup_title": "Software development"
+        }
+        self.meetup_data5 = {
+            "meetup_date": "28th January 2019",
+            "location": "Roysambu",
+            "about": "Andela bootcamp",
+            "meetup_image": "image.png",
+            "meetup_title": ""
+        }
 
     def registration(self):
         '''Register a new user'''
@@ -249,6 +284,7 @@ class BaseTest(unittest.TestCase):
 
     def create_meetup(self):
         '''Create a meetup'''
+        self.registration()
         header = self.user_token()
 
         res = self.client.post(
@@ -278,10 +314,51 @@ class BaseTest(unittest.TestCase):
             '/api/V2/meetups/100')
         return res
 
+    def missing_meetup_title(self):
+        '''Register a new user'''
+        res = self.client.post(
+            '/api/V2/meetups',
+            data=json.dumps(self.meetup_data5),
+            content_type='application/json')
+        return res
+
+    def missing_meetup_date(self):
+        '''Register a new user'''
+        res = self.client.post(
+            '/api/V2/meetups',
+            data=json.dumps(self.meetup_data1),
+            content_type='application/json')
+        return res
+
+    def missing_meetup_about(self):
+        '''Register a new user'''
+        res = self.client.post(
+            '/api/V2/meetups',
+            data=json.dumps(self.meetup_data3),
+            content_type='application/json')
+        return res
+
+    def missing_meetup_location(self):
+        '''Register a new user'''
+        res = self.client.post(
+            '/api/V2/meetups',
+            data=json.dumps(self.meetup_data2),
+            content_type='application/json')
+        return res
+
+    def missing_meetup_image(self):
+        '''Register a new user'''
+        res = self.client.post(
+            '/api/V2/meetups',
+            data=json.dumps(self.meetup_data4),
+            content_type='application/json')
+        return res
+
     # Tests involving questions
 
     def post_question(self):
         """post question"""
+        self.registration()
         self.login()
         header = self.user_token()
 
@@ -292,6 +369,7 @@ class BaseTest(unittest.TestCase):
 
     def post_empty_question_field(self):
         '''Test for empty field in question'''
+        self.registration()
         self.login()
         header = self.user_token()
         res = self.client.post(

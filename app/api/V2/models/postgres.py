@@ -43,7 +43,7 @@ def destroy_tables():
         admin_query = """INSERT INTO users (firstname, lastname, email,
         password, confirm_password, imagefile, role, phonenumber) VALUES
         (Murunga, Kibaara, murungakibaara@protonmail.com, admin_secret_password, admin_secret_password
-        ,Admin_dp.jpg ,Admin,0719562555;"""
+        ,Admin_dp.jpg, Admin, 0719562555;"""
 
         cur.execute(admin_query)
         cur.commit()
@@ -57,6 +57,8 @@ def tables():
             user_id serial PRIMARY KEY NOT NULL,
             firstname character varying(1000) NOT NULL,
             lastname character varying(1000) NOT NULL,
+            phonenumber character varying(1000) NOT NULL,
+            role character varying(1000) NOT NULL,
             email character varying(1000) NOT NULL,
             password character varying(1000) NOT NULL,
             confirm_password character varying(1000) NOT NULL,
@@ -66,22 +68,21 @@ def tables():
 
     meetups_db = """CREATE TABLE IF NOT EXISTS meetups (
             meetup_id serial PRIMARY KEY NOT NULL,
-            Meeetup_title character varying(1000) NOT NULL,
+            Meetup_title character varying(1000) NOT NULL,
             location character varying(1000) NOT NULL,
             meetup_date character varying(1000) NOT NULL,
+            meetup_image character varying(1000) NOT NULL,
             about character varying(1000) NOT NULL,
-            date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT TIMESTAMP 'epoch');"""   
+            date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT TIMESTAMP 'epoch');"""
 
     questions_db = """CREATE TABLE IF NOT EXISTS questions (
             question_id serial PRIMARY KEY NOT NULL,
-            user_id integer NULL,
-            votes integer NULL,
+            votes integer NOT NULL,
             question character varying(1000) NOT NULL,
             date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT TIMESTAMP 'epoch');"""
 
     comments_db = """CREATE TABLE IF NOT EXISTS comments (
             comment_id serial PRIMARY KEY NOT NULL,
-            user_id integer NOT NULL,
             comment character varying(1000) NOT NULL,
             date_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT TIMESTAMP 'epoch');"""
 

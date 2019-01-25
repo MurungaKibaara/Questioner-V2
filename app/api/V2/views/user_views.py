@@ -29,40 +29,40 @@ def user_reg():
     imagefile = data["imagefile"]
 
     if not firstname.strip():
-        return jsonify({"Error":"firstname cannot be empty"}), 401
+        return jsonify({"error":"firstname cannot be empty"}), 401
 
     if not re.match(r"^[A-Za-z][a-zA-Z]", firstname):
         return jsonify({"error":"input valid firstname"}), 400
 
     if not lastname.strip():
-        return jsonify({"Error":"lastname cannot be empty"}), 401
+        return jsonify({"error":"lastname cannot be empty"}), 401
 
     if not re.match(r"^[A-Za-z][a-zA-Z]", lastname):
         return jsonify({"error":"input valid lastname"}), 400
 
     if not phonenumber.strip():
-        return jsonify({"Error":"phonenumber cannot be empty"}), 401
+        return jsonify({"error":"phonenumber cannot be empty"}), 401
 
     if not re.match(r"^[0-9]", phonenumber):
         return jsonify({"error":"input valid phonenumber"}), 400
 
     if not email.strip():
-        return jsonify({"Error":"email cannot be empty"}), 401
+        return jsonify({"error":"email cannot be empty"}), 401
 
     if not password.strip():
-        return jsonify({"Error":"password cannot be empty"}), 401
+        return jsonify({"error":"password cannot be empty"}), 401
 
-    if not re.match(r'[A-Za-z0-9@#$]{6,12}', password):
-        return jsonify({"Error":"Input a stronger password"}), 401
+    if not re.match(r'[A-Za-z0-9@#$]{6,12}', pwd):
+        return jsonify({"error":"Input a stronger password"}), 401
 
     if not confirm_password.strip():
-        return jsonify({"Error":"confirm password cannot be empty"}), 401
+        return jsonify({"error":"confirm password cannot be empty"}), 401
 
     if not re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$", email):
         return jsonify({"error":"input valid email"}), 400
 
     if not check_password_hash(password, confirm_password):
-        return jsonify({"Error":"passwords did not match"}), 401
+        return jsonify({"error":"passwords did not match"}), 401
 
     # Check whether a user exists
     cur = INIT_DB.cursor()
@@ -70,7 +70,7 @@ def user_reg():
     data = cur.fetchone()
 
     if data is not None:
-        return jsonify({"Message": "User already exists"}), 400
+        return jsonify({"message": "User already exists"}), 400
 
 
     try:
@@ -79,7 +79,7 @@ def user_reg():
 
         return make_response(jsonify({
             "status": "201",
-            "Success": "User created"}), 201)
+            "success": "user created"}), 201)
 
     except (psycopg2.Error) as error:
         return jsonify(error)
