@@ -298,28 +298,28 @@ class BaseTest(unittest.TestCase):
         res = self.client.post(
             '/api/V2/meetups', headers=header,
             data=json.dumps(self.meetup_data), content_type='application/json')
-
         return res
 
     def get_all_meetups(self):
         '''Get all meetups'''
 
         res = self.client.get(
-            '/api/V2/meetups/all')
+            '/api/V2/meetups')
         return res
 
     def get_one_meetup(self):
         '''get a specific meetup'''
 
         res = self.client.get(
-            '/api/V2/meetups/all/1')
+            '/api/V2/meetups/1')
+        print(res)
         return res
 
     def get_meetup_doesnt_exist(self):
         '''Test for non existent meetup'''
 
         res = self.client.get(
-            '/api/V2/meetups/100')
+            '/api/V2/meetups/100/')
         return res
 
     def missing_meetup_title(self):
@@ -371,7 +371,7 @@ class BaseTest(unittest.TestCase):
         header = self.user_token()
 
         res = self.client.post(
-            '/api/V2/1/questions', headers=header,
+            '/api/V2/questions', headers=header,
             data=json.dumps(self.question_data), content_type='application/json')
         return res
 
@@ -381,7 +381,7 @@ class BaseTest(unittest.TestCase):
         self.login()
         header = self.user_token()
         res = self.client.post(
-            '/api/V2/1/questions',
+            '/api/V2/questions',
             data=json.dumps(self.empty_question_field), headers=header,
             content_type='application/json')
         return res
@@ -395,6 +395,7 @@ class BaseTest(unittest.TestCase):
 
     def get_one_question(self):
         '''get a specific question'''
+        self.post_question()
         res = self.client.get(
             '/api/V2/questions/1/')
         return res

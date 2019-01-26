@@ -1,6 +1,7 @@
 '''Questions endpoints'''
 import re
 import psycopg2
+from psycopg2.extras import RealDictCursor
 from flask import Blueprint, request, jsonify
 from app.api.V2.models.meetup_models import MeetupRecords
 from app.api.V2.utils.validators import login_required
@@ -17,61 +18,64 @@ MEETS = MeetupRecords()
 @login_required
 def post_meetups():
     '''Allow admins to post meetups'''
-    data = request.get_json()
-
-    meetup_title = data["meetup_title"]
-    about = data["about"]
-    location = data["location"]
-    meetup_date = data["meetup_date"]
-    meetup_image = data["meetup_image"]
-
-    cur = INIT_DB.cursor()
-    cur.execute("""  SELECT meetup_title FROM meetups WHERE meetup_title = '%s' """ %(meetup_title))
-    data = cur.fetchone()
-
-    if data is not None:
-        return jsonify({"Message": "meetup already exists"}), 400
-
-    if not meetup_title.strip():
-        return jsonify({"Error":"question field cannot be empty"}), 401
-
-    if not re.match(r"^[A-Za-z][a-zA-Z]", meetup_title):
-        return jsonify({"error":"input valid meetup_title"})
-
-    if not about.strip():
-        return jsonify({"Error":"about field cannot be empty"}), 401
-
-    if not re.match(r"^[A-Za-z][a-zA-Z]", about):
-        return jsonify({"error":"input valid about"})
-
-    if not location.strip():
-        return jsonify({"Error":"question field cannot be empty"}), 401
-    if not re.match(r"^[A-Za-z][a-zA-Z]", location):
-        return jsonify({"error":"input valid location"})
-
-    if not meetup_date.strip():
-        return jsonify({"Error":"question field cannot be empty"}), 401
-
-    if not meetup_image.strip():
-        return jsonify({"Error":"question field cannot be empty"}), 401
-
-
     try:
-        MeetupRecords().meetups(meetup_date, about, meetup_title, location, meetup_image)
 
-        return jsonify({
-            "status": "201",
-            "message": "success! Meetup posted"}), 201
-    except (psycopg2.Error) as error:
-        return jsonify(error)
+        data = request.get_json()
+
+        meetup_title = data["meetup_title"]
+        about = data["about"]
+        location = data["location"]
+        meetup_date = data["meetup_date"]
+        meetup_image = data["meetup_image"]
+
+        if not meetup_title.strip():
+            return jsonify({"error":"question field cannot be empty"}), 401
+
+        if not re.match(r"^[A-Za-z][a-zA-Z]", meetup_title):
+            return jsonify({"error":"input valid meetup_title"}), 401
+
+        if not about.strip():
+            return jsonify({"error":"about field cannot be empty"}), 401
+
+        if not re.match(r"^[A-Za-z][a-zA-Z]", about):
+            return jsonify({"error":"input valid about"}), 401
+
+        if not location.strip():
+            return jsonify({"Error":"question field cannot be empty"}), 401
+
+        if not re.match(r"^[A-Za-z][a-zA-Z]", location):
+            return jsonify({"error":"input valid location"}), 401
+
+        if not meetup_date.strip():
+            return jsonify({"error":"question field cannot be empty"}), 401
+
+        if not meetup_image.strip():
+            return jsonify({"error":"question field cannot be empty"}), 400
+
+        try:
+
+            cur = INIT_DB.cursor(cursor_factory=RealDictCursor)
+            cur.execute("""  SELECT meetup_title FROM meetups WHERE meetup_title = '%s' """ %(meetup_title))
+            data = cur.fetchone()
+
+            if data is not None:
+                return jsonify({"Message": "meetup already exists"}), 400
+
+            return MeetupRecords().meetups(meetup_date, about, meetup_title, location, meetup_image)
+
+        except psycopg2.Error:
+            return jsonify({"error":"error posting meetups to database"}), 400
+
+    except KeyError:
+        return jsonify({"error":"A key is missing"}), 400
 
 
-@GETMEETUPS.route('/meetups/all', methods=['GET'])
+@GETMEETUPS.route('/meetups', methods=['GET'])
 def getall():
     '''Allow users to get all meetups'''
     return MEETS.get_all_meetups()
 
-@GETMEETUPS.route('/meetups/all/<int:meetup_id>', methods=['GET'])
+@GETMEETUPS.route('/meetups/<int:meetup_id>', methods=['GET'])
 def getone(meetup_id):
     '''Allow users to get one meetup'''
     return MEETS.get_one_meetup(meetup_id)
