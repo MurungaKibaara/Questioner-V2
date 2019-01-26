@@ -19,6 +19,7 @@ MEETS = MeetupRecords()
 def post_meetups():
     '''Allow admins to post meetups'''
     try:
+
         data = request.get_json()
 
         meetup_title = data["meetup_title"]
@@ -28,25 +29,25 @@ def post_meetups():
         meetup_image = data["meetup_image"]
 
         if not meetup_title.strip():
-            return jsonify({"error":"question field cannot be empty"}), 400
+            return jsonify({"error":"question field cannot be empty"}), 401
 
         if not re.match(r"^[A-Za-z][a-zA-Z]", meetup_title):
-            return jsonify({"error":"input valid meetup_title"}), 400
+            return jsonify({"error":"input valid meetup_title"}), 401
 
         if not about.strip():
-            return jsonify({"error":"about field cannot be empty"}), 400
+            return jsonify({"error":"about field cannot be empty"}), 401
 
         if not re.match(r"^[A-Za-z][a-zA-Z]", about):
-            return jsonify({"error":"input valid about"}), 400
+            return jsonify({"error":"input valid about"}), 401
 
         if not location.strip():
-            return jsonify({"Error":"question field cannot be empty"}), 400
+            return jsonify({"Error":"question field cannot be empty"}), 401
 
         if not re.match(r"^[A-Za-z][a-zA-Z]", location):
-            return jsonify({"error":"input valid location"}), 400
+            return jsonify({"error":"input valid location"}), 401
 
         if not meetup_date.strip():
-            return jsonify({"error":"question field cannot be empty"}), 400
+            return jsonify({"error":"question field cannot be empty"}), 401
 
         if not meetup_image.strip():
             return jsonify({"error":"question field cannot be empty"}), 400

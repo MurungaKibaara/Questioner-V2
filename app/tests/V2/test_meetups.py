@@ -32,19 +32,19 @@ class TestMeetups(BaseTest):
     def test_missing_location(self):
         """Test missing field"""
         response = self.missing_meetup_location()
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 401)
 
     def test_missing_title(self):
         """Test missing field"""
         response = self.missing_meetup_title()
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 401)
 
     def test_missing_about(self):
         """Test missing field"""
         response = self.missing_meetup_about()
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 401)
 
     def test_missing_meetup_date(self):
         """Test missing field"""
         response = self.missing_meetup_date()
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 401)

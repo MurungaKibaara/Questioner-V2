@@ -395,6 +395,7 @@ class BaseTest(unittest.TestCase):
 
     def get_one_question(self):
         '''get a specific question'''
+        self.post_question()
         res = self.client.get(
             '/api/V2/questions/1/')
         return res
