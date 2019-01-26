@@ -13,19 +13,19 @@ class QuestionRecords():
         """initialize the database and argument variables"""
         self.database = INIT_DB
 
-    def questions(self, question):
+    def questions(self, question, votes):
         """ Add a new user to all user data """
 
         payload = {
             "question": question,
-            "votes": 0
+            "votes": votes
         }
 
         try:
-            cur = init_db().cursor()
-            query = """ INSERT INTO questions (question) VALUES ('%s') """ %(question)
+            cur = INIT_DB.cursor()
+            query = """ INSERT INTO questions (votes, question) VALUES (%d, '%s') """ %(votes, question)
             cur.execute(query, payload)
-            init_db().commit()
+            INIT_DB.commit()
 
             return jsonify({
                 "status": 201,
@@ -73,7 +73,9 @@ class QuestionRecords():
                 data), 200
 
         except psycopg2.Error:
-            return jsonify({"error":"error retrieving data from database"}), 400
+            return jsonify({
+                "status": 400,
+                "error":"error retrieving data from database"}), 400
 
     def up_vote(self, question_id):
         '''A user can upvote'''
@@ -83,7 +85,9 @@ class QuestionRecords():
         data = cur.fetchone()
 
         if data is None:
-            return jsonify({"message": "No questions found"}), 404
+            return jsonify({
+                "status": 400,
+                "message": "No questions found"}), 404
         try:
             vote = data[0] + 1
             upvote_query = """ UPDATE questions SET votes = %d WHERE question_id = '%d' """ %(vote, question_id)
@@ -97,7 +101,9 @@ class QuestionRecords():
             }), 200
 
         except psycopg2.Error:
-            return jsonify({"error":"not upvoted"}), 400
+            return jsonify({
+                "status": 400,
+                "error":"not upvoted"}), 400
 
     def down_vote(self, question_id):
         '''A user can upvote'''
@@ -108,7 +114,9 @@ class QuestionRecords():
             data = cur.fetchone()
 
             if data is None:
-                return jsonify({"message": "No questions found"}), 404
+                return jsonify({
+                    "status": 404,
+                    "message": "No questions found"}), 404
 
             vote = data[0] - 1
             downvote_query = """ UPDATE questions SET votes = %d WHERE question_id = '%d' """ %(vote, question_id)

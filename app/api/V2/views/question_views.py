@@ -22,6 +22,7 @@ def post_questions():
     try:
 
         question = request.get_json()["question"]
+        votes = 0
 
         if not question.strip():
             return jsonify({"error":"question field cannot be empty"}), 400
@@ -38,7 +39,7 @@ def post_questions():
             return jsonify({"message": "question already exists"}), 400
 
         try:
-            return QUESTION_RECORDS.questions(question)
+            return QUESTION_RECORDS.questions(question, votes)
 
         except (psycopg2.Error) as error:
             print(error)
