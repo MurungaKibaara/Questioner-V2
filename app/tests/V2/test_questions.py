@@ -29,4 +29,4 @@ class TestViews(BaseTest):
     def test_one_question_doesnt_exist(self):
         """Test empty question field"""
         response = self.get_one_question_doesnt_exist()
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 404)

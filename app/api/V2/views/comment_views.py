@@ -14,23 +14,28 @@ COMMENT_RECORDS = CommentRecords()
 @login_required
 def post_comments():
     '''Allow users to post questions'''
-    data = request.get_json()
-    comment = data["comment"]
-
-    if not comment.strip():
-        return jsonify({"error":"question field cannot be empty"}), 400
-
-    if not re.match(r"^[A-Za-z][a-zA-Z]", comment):
-        return jsonify({"error":"input valid question"}), 400
-
     try:
-        COMMENT_RECORDS.comments(comment)
 
-        return make_response(jsonify({
-            "status": "201",
-            "message": "success"}), 201)
-    except (psycopg2.Error) as error:
-        return jsonify(error)
+        data = request.get_json()
+        comment = data["comment"]
+
+        if not comment.strip():
+            return jsonify({"error":"question field cannot be empty"}), 400
+
+        if not re.match(r"^[A-Za-z][a-zA-Z]", comment):
+            return jsonify({"error":"input valid question"}), 400
+
+        try:
+            COMMENT_RECORDS.comments(comment)
+
+            return make_response(jsonify({
+                "status": "201",
+                "message": "success"}), 201)
+        except (psycopg2.Error) as error:
+            return jsonify(error)
+
+    except KeyError:
+        return jsonify({"error":"a key is missing"})
 
 
 @GETCOMMENTS.route('/comments', methods=['GET'])
