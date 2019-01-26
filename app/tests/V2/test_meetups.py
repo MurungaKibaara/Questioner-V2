@@ -27,24 +27,24 @@ class TestMeetups(BaseTest):
     def test_meetup_does_not_exist(self):
         '''Test get nonexistent meetup'''
         response = self.get_meetup_doesnt_exist()
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 404)
 
     def test_missing_location(self):
         """Test missing field"""
         response = self.missing_meetup_location()
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 400)
 
     def test_missing_title(self):
         """Test missing field"""
         response = self.missing_meetup_title()
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 400)
 
     def test_missing_about(self):
         """Test missing field"""
         response = self.missing_meetup_about()
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 400)
 
     def test_missing_meetup_date(self):
         """Test missing field"""
         response = self.missing_meetup_date()
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 400)

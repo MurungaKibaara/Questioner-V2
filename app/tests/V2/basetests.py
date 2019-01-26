@@ -396,7 +396,7 @@ class BaseTest(unittest.TestCase):
     def get_one_question(self):
         '''get a specific question'''
         res = self.client.get(
-            '/api/V2/questions/1')
+            '/api/V2/questions/1/')
         return res
 
     def get_one_question_doesnt_exist(self):
