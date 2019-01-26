@@ -25,7 +25,7 @@ class BaseTest(unittest.TestCase):
             "phonenumber": "0743212345",
             "email": "ephkibrwa@gmail.com",
             "password": "@WAssup2345",
-            "confirm_password": "WAssup2345",
+            "confirm_password": "@WAssup2345",
             "imagefile": "imagefile.jpg"
         }
 
