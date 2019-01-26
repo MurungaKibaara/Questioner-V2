@@ -1,7 +1,7 @@
 '''Questions endpoints'''
 import re
 import psycopg2
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, request, jsonify
 from app.api.V2.models.question_models import QuestionRecords
 from app.api.V2.utils.validators import login_required
 from app.api.V2.models.postgres import init_db
@@ -38,12 +38,7 @@ def post_questions():
             return jsonify({"message": "question already exists"}), 400
 
         try:
-            data = QUESTION_RECORDS.questions(question)
-            print(data)
-            return make_response(jsonify({
-                "status": "201",
-                # "data": data,
-                "message": "Success! Question posted"}), 201)
+            return QUESTION_RECORDS.questions(question)
 
         except (psycopg2.Error) as error:
             print(error)
