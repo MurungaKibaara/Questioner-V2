@@ -3,7 +3,6 @@ from .basetests import BaseTest
 
 class TestUsers(BaseTest):
     """Test user registration and login"""
-
     def test_user_login(self):
         """Test user login endpoint"""
         response = self.login()
@@ -32,7 +31,7 @@ class TestUsers(BaseTest):
     def test_missing_image(self):
         """Test missing field"""
         response = self.missing_image()
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 401)
 
     def test_missing_password(self):
         """Test missing field"""

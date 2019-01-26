@@ -1,7 +1,6 @@
 '''Base test class for tests'''
 import unittest
 import json
-#import pytest
 from app import create_app
 from app.api.V2.models.postgres import init_db
 
@@ -23,10 +22,10 @@ class BaseTest(unittest.TestCase):
         self.signup_data = {
             "firstname": "Ephy",
             "lastname": "Kibaara",
-            "phonenumber": "074321234",
-            "email": "ephykibrwwwa@gmail.com",
-            "password": "WAssup2345",
-            "confirm_password": "WAssup2345",
+            "phonenumber": "0743212345",
+            "email": "ephkibrwa@gmail.com",
+            "password": "@WAssup2345",
+            "confirm_password": "@WAssup2345",
             "imagefile": "imagefile.jpg"
         }
 
@@ -44,8 +43,8 @@ class BaseTest(unittest.TestCase):
             "lastname": "",
             "phonenumber": "0780997711",
             "email": "ephykibrwwwwwwwwwwwwwa@gmail.com",
-            "password": "WAssup2345",
-            "confirm_password": "WAssup2345",
+            "password": "@WAssup2345",
+            "confirm_password": "@WAssup2345",
             "imagefile": "imagefile.jpg"
         }
         self.signup_data3 = {
@@ -53,8 +52,8 @@ class BaseTest(unittest.TestCase):
             "lastname": "Kibaara",
             "phonenumber": " ",
             "email": "ephykibrwwwwwwwwwwwwwa@gmail.com",
-            "password": "WAssup2345",
-            "confirm_password": "WAssup2345",
+            "password": "@WAssup2345",
+            "confirm_password": "@WAssup2345",
             "imagefile": "imagefile.jpg"
         }
         self.signup_data4 = {
@@ -62,8 +61,8 @@ class BaseTest(unittest.TestCase):
             "lastname": "Kibaara",
             "phonenumber": "0780997711",
             "email": "",
-            "password": "WAssup2345",
-            "confirm_password": "WAssup2345",
+            "password": "@WAssup2345",
+            "confirm_password": "@WAssup2345",
             "imagefile": "imagefile.jpg"
         }
         self.signup_data5 = {
@@ -71,7 +70,7 @@ class BaseTest(unittest.TestCase):
             "lastname": "Kibaara",
             "phonenumber": "0780997711",
             "email": "ephykibrwwwwwwwwwwwwwa@gmail.com",
-            "password": "WAssup2345",
+            "password": "@WAssup2345",
             "confirm_password": "",
             "imagefile": "imagefile.jpg"
         }
@@ -81,7 +80,7 @@ class BaseTest(unittest.TestCase):
             "phonenumber": "0780997711",
             "email": "ephykibrwwwwwwwwwwwwwa@gmail.com",
             "password": "",
-            "confirm_password": "WWassup2345",
+            "confirm_password": "@Wassup2345",
             "imagefile": "imagefile.jpg"
         }
         self.signup_data9 = {
@@ -89,8 +88,8 @@ class BaseTest(unittest.TestCase):
             "lastname": "Kibaara",
             "phonenumber": "0780997711",
             "email": "ephykibrwwwwwwwwwwwwwagmail.com",
-            "password": "WAssup2345",
-            "confirm_password": "Wassup2345",
+            "password": "@WAssup2345",
+            "confirm_password": "@Wassup2345",
             "imagefile": "imagefile.jpg"
         }
         self.signup_data6 = {
@@ -98,26 +97,26 @@ class BaseTest(unittest.TestCase):
             "lastname": "Kibaara",
             "phonenumber": "0780997711",
             "email": "ephykibrwwwwwwwwwwwwwa@gmail.com",
-            "password": "WAssup2345",
-            "confirm_password": "ssup2345",
+            "password": "@WAssup2345",
+            "confirm_password": "ssup@2345",
             "imagefile": "imagefile.jpg"
         }
         self.signup_data7 = {
             "firstname": "Ephy",
             "lastname": "Kibaara",
-            "phonenumber": "martial",
+            "phonenumber": "0780997711",
             "email": "ephykibaara@gmail.com",
-            "password": "WAssup2345",
-            "confirm_password": "WAssup2345",
+            "password": "@WAssup2345",
+            "confirm_password": "@WAssup2345",
             "imagefile": ""
         }
 
         self.duplicate_user_data = {
             "firstname": "Ephy",
             "lastname": "Kibaara",
-            "phonenumber": "martial",
+            "phonenumber": "0780997711",
             "email": "ephykibaara@gmail.com",
-            "password": "WAssup2345",
+            "password": "@WAssup2345",
             "confirm_password": "WAssup2345",
             "imagefile": "imagefile.jpg"
         }
@@ -125,8 +124,8 @@ class BaseTest(unittest.TestCase):
         # User login data
 
         self.login_data = {
-            "email": "ephykibrwwwa@gmail.com",
-            "password": "WAssup2345"
+            "email": "ephkibrwa@gmail.com",
+            "password": "@WAssup2345"
         }
 
         # Question data
@@ -136,6 +135,15 @@ class BaseTest(unittest.TestCase):
         }
         self.empty_question_field = {
             "question": " "
+        }
+
+        # comment data
+
+        self.comment_data = {
+            "comment": "It is part of machine learning"
+        }
+        self.empty_comment_field = {
+            "comment": " "
         }
 
         # Meetup data
@@ -401,10 +409,23 @@ class BaseTest(unittest.TestCase):
 
     def post_comments(self):
         '''Post a comment'''
+        self.registration()
+        header = self.user_token()
 
         res = self.client.post(
             '/api/V2/comments',
-            data=json.dumps(self.question_data),
+            data=json.dumps(self.comment_data), headers=header,
+            content_type='application/json')
+        return res
+
+    def post_empty_comment_field(self):
+        '''Test for empty field in question'''
+        self.registration()
+        self.login()
+        header = self.user_token()
+        res = self.client.post(
+            '/api/V2/comments',
+            data=json.dumps(self.empty_comment_field), headers=header,
             content_type='application/json')
         return res
 
@@ -412,14 +433,20 @@ class BaseTest(unittest.TestCase):
         '''Get all questions'''
 
         res = self.client.get(
-            '/api/V2/questions/all')
+            '/api/V2/comments')
         return res
 
     def get_one_comment(self):
         '''get a apecific question'''
 
         res = self.client.get(
-            '/api/V2/questions/all/1')
+            '/api/V2/comments/1')
+        return res
+
+    def get_one_comment_doesnt_exist(self):
+        '''get a specific question'''
+        res = self.client.get(
+            '/api/V2/comments/431/')
         return res
 
     # def tearDown(self):

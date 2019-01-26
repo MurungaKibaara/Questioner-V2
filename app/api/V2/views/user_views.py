@@ -43,6 +43,9 @@ def user_reg():
     if not phonenumber.strip():
         return jsonify({"error":"phonenumber cannot be empty"}), 401
 
+    if len(phonenumber) != 10:
+        return jsonify({"error":"phonenumber has 10 digits"}), 401
+
     if not re.match(r"^[0-9]", phonenumber):
         return jsonify({"error":"input valid phonenumber"}), 400
 
@@ -57,6 +60,9 @@ def user_reg():
 
     if not confirm_password.strip():
         return jsonify({"error":"confirm password cannot be empty"}), 401
+
+    if not imagefile.strip():
+        return jsonify({"error":"upload an image"}), 401
 
     if not re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$", email):
         return jsonify({"error":"input valid email"}), 400
